@@ -13,6 +13,7 @@ function App() {
   const { incrementClock, decrementClock, restartClock, resetClock, timeClock } = bindActionCreators(clockActions, dispatch);
   const { incrementBreak, decrementBreak, restartBreak, resetBreak, timeBreak } = bindActionCreators(breakActions, dispatch);
   const [play, setPlay] = useState(false);
+  const [settings, setSettings] = useState(false);
   const currentPlay = useRef("Session");
   const audio = useRef(<audio id="beep" preload="auto" src="https://raw.githubusercontent.com/freeCodeCamp/cdn/master/build/testable-projects-fcc/audio/BeepSound.wav" />);
   const decreaseTime = () => {
@@ -38,38 +39,44 @@ function App() {
   }, [play, clockValue[1], breakValue[1]]);
   return (
     <div className="container">
-      <div className="timer-container">
-        <div id="timer-label">
-          {currentPlay.current}
-        </div>
-        <div id="time-left">
-          {currentPlay.current === "Break" ? breakValue[1] : clockValue[1]}
-        </div>
-        <div id="session-label">
-          Session Length:
-          <div id="session-length">
-            {parseInt(clockValue[0].substring(0, 2))}
+      <div className="main-container">
+        <div className="timer-container">
+          <div id="timer-label">
+            {currentPlay.current === "Break" ? "Take a break!" : "Time to focus!"}
           </div>
-          <button id="session-increment" onClick={() => { if (!play && parseInt(clockValue[0].substring(0, 2)) < 60) incrementClock() }}>+</button>
-          <button id="session-decrement" onClick={() => { if (!play && parseInt(clockValue[0].substring(0, 2)) > 1) decrementClock() }}>-</button>
-        </div>
-        <div id="break-label">
-          Break Length:
-          <div id="break-length">
-            {parseInt(breakValue[0].substring(0, 2))}
+          <div id="time-left">
+            {currentPlay.current === "Break" ? breakValue[1] : clockValue[1]}
           </div>
-          <button id="break-increment" onClick={() => { if (!play && parseInt(breakValue[0].substring(0, 2)) < 60) incrementBreak() }}>+</button>
-          <button id="break-decrement" onClick={() => { if (!play && parseInt(breakValue[0].substring(0, 2)) > 1) decrementBreak() }}>-</button>
+          <button id="start_stop" className="main-controls" onClick={() => { setPlay(!play) }}>{play ? "Pause" : "Play"}</button>
+          <button id="reset" className="main-controls" onClick={() => {
+            document.getElementById("beep").pause();
+            document.getElementById("beep").currentTime = 0;
+            currentPlay.current = "Session";
+            resetBreak();
+            resetClock();
+            setPlay(false);
+          }}>Reset</button>
         </div>
-        <button id="start_stop" className="main-controls" onClick={() => { setPlay(!play) }}>{play ? "Pause" : "Play"}</button>
-        <button id="reset" className="main-controls" onClick={() => {
-          document.getElementById("beep").pause();
-          document.getElementById("beep").currentTime = 0;
-          currentPlay.current = "Session";
-          resetBreak();
-          resetClock();
-          setPlay(false);
-        }}>Reset</button>
+        {
+          <div id="timer-settings">
+            <div id="session-label">
+              Session Length:
+              <div id="session-length">
+                {parseInt(clockValue[0].substring(0, 2))}
+              </div>
+              <button id="session-increment" onClick={() => { if (!play && parseInt(clockValue[0].substring(0, 2)) < 60) incrementClock() }}>+</button>
+              <button id="session-decrement" onClick={() => { if (!play && parseInt(clockValue[0].substring(0, 2)) > 1) decrementClock() }}>-</button>
+            </div>
+            <div id="break-label">
+              Break Length:
+              <div id="break-length">
+                {parseInt(breakValue[0].substring(0, 2))}
+              </div>
+              <button id="break-increment" onClick={() => { if (!play && parseInt(breakValue[0].substring(0, 2)) < 60) incrementBreak() }}>+</button>
+              <button id="break-decrement" onClick={() => { if (!play && parseInt(breakValue[0].substring(0, 2)) > 1) decrementBreak() }}>-</button>
+            </div>
+          </div>
+        }
       </div>
       {audio.current}
     </div>

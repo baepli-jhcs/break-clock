@@ -35,23 +35,28 @@ button {
     height: 0;
     position: absolute;
 }
+.main-container {
+    display: flex;
+    width: 80%;
+    height: 80%;
+    align-items: center;
+}
 
 .timer-container {
     background-color: hsl(180, 0%, 22%);
     width: 75%;
-    height: 80%;
+    height: 100%;
     padding: 2%;
     border-radius: 80px;
     display: grid;
-    grid-row-gap: 2rem;
     box-shadow: 0px 0px 40px hsl(180, 0%, 20%);
     grid-template-columns: repeat(6, 1fr);
-    grid-template-rows: repeat(6, 1fr);
+    grid-template-rows: repeat(5, 1fr);
     justify-content: center;
 }
 
 #time-left {
-    font-size: 20rem;
+    font-size: 22rem;
     grid-column: 3/5;
     grid-row: 2/4;
     align-self: center;
@@ -84,4 +89,11 @@ button {
 }
 .main-controls:active {
     background-color: hsl(248, 39%, 50%);
+}
+#timer-label {
+    grid-column: 3/5;
+    align-self: center;
+    justify-self: center;
+    grid-row: 1/2;
+    font-size: 3rem ;
 }
