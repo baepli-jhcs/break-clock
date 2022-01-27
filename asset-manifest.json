@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/break-clock/static/css/main.9a0ae07b.css",
+    "main.js": "/break-clock/static/js/main.206c90c9.js",
+    "index.html": "/break-clock/index.html",
+    "main.9a0ae07b.css.map": "/break-clock/static/css/main.9a0ae07b.css.map",
+    "main.206c90c9.js.map": "/break-clock/static/js/main.206c90c9.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.9a0ae07b.css",
+    "static/js/main.206c90c9.js"
+  ]
+}
