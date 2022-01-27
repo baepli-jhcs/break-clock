@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 import { clockActions } from './state/slices/clock';
 import { breakActions } from './state/slices/break';
 import "./App.css";
+import { motion } from "framer-motion";
 
 function App() {
   const clockValue = useSelector(state => state.clockReducer);
@@ -15,6 +16,15 @@ function App() {
   const [play, setPlay] = useState(false);
   const [settings, setSettings] = useState(false);
   const currentPlay = useRef("Session");
+  const [matches, setMatches] = useState(
+    window.matchMedia("(min-width: 768px)").matches
+  );
+  let settingsSize;
+  if (matches) {
+    settingsSize = 80;
+  } else {
+    settingsSize = 65;
+  }
   const audio = useRef(<audio id="beep" preload="auto" src="https://raw.githubusercontent.com/freeCodeCamp/cdn/master/build/testable-projects-fcc/audio/BeepSound.wav" />);
   const decreaseTime = () => {
     if (clockValue[1] === "00:00") {
@@ -37,10 +47,16 @@ function App() {
     return () => clearInterval(id);
     // eslint-disable-next-line
   }, [play, clockValue[1], breakValue[1]]);
+
+  useEffect(() => {
+    window
+      .matchMedia("(min-width: 768px)")
+      .addEventListener('change', e => setMatches(e.matches));
+  }, []);
   return (
     <div className="container">
       <div className="main-container">
-        <div className="timer-container">
+        <motion.div animate={{ width: settings ? settingsSize + "%" : '100%', 'border-radius': settings ? '80px 0px 0px 80px' : "80px", padding: '2.2%' }} className="timer-container">
           <div id="timer-label">
             {currentPlay.current === "Break" ? "Take a break!" : "Time to focus!"}
           </div>
@@ -56,27 +72,26 @@ function App() {
             resetClock();
             setPlay(false);
           }}>Reset</button>
-        </div>
-        {
-          <div id="timer-settings">
-            <div id="session-label">
-              Session Length:
-              <div id="session-length">
-                {parseInt(clockValue[0].substring(0, 2))}
-              </div>
-              <button id="session-increment" onClick={() => { if (!play && parseInt(clockValue[0].substring(0, 2)) < 60) incrementClock() }}>+</button>
-              <button id="session-decrement" onClick={() => { if (!play && parseInt(clockValue[0].substring(0, 2)) > 1) decrementClock() }}>-</button>
-            </div>
-            <div id="break-label">
-              Break Length:
-              <div id="break-length">
-                {parseInt(breakValue[0].substring(0, 2))}
-              </div>
-              <button id="break-increment" onClick={() => { if (!play && parseInt(breakValue[0].substring(0, 2)) < 60) incrementBreak() }}>+</button>
-              <button id="break-decrement" onClick={() => { if (!play && parseInt(breakValue[0].substring(0, 2)) > 1) decrementBreak() }}>-</button>
+          <button id="settings" onClick={() => setSettings(!settings)}>Settings</button>
+        </motion.div>
+        <motion.div animate={{ width: settings ? (100 - settingsSize) + "%" : '0%' }} className="timer-settings">
+          <div id="session-label" className="settings-label">
+            Session Length: &nbsp;
+            <div id="session-length">
+              {parseInt(clockValue[0].substring(0, 2))}
             </div>
           </div>
-        }
+          <button id="session-increment" onClick={() => { if (!play && parseInt(clockValue[0].substring(0, 2)) < 60) incrementClock() }}>+</button>
+          <button id="session-decrement" onClick={() => { if (!play && parseInt(clockValue[0].substring(0, 2)) > 1) decrementClock() }}>-</button>
+          <div id="break-label" className="settings-label">
+            Break Length: &nbsp;
+            <div id="break-length">
+              {parseInt(breakValue[0].substring(0, 2))}
+            </div>
+          </div>
+          <button id="break-increment" onClick={() => { if (!play && parseInt(breakValue[0].substring(0, 2)) < 60) incrementBreak() }}>+</button>
+          <button id="break-decrement" onClick={() => { if (!play && parseInt(breakValue[0].substring(0, 2)) > 1) decrementBreak() }}>-</button>
+        </motion.div>
       </div>
       {audio.current}
     </div>
